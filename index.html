@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDFtoLedger — Convert PDF Bank Statements to Categorised Excel Spreadsheets Free</title>
+<meta name="description" content="Convert PDF bank statements to categorised Excel spreadsheets in seconds. Free bank statement converter with auto-categorisation for Barclays, HSBC, Lloyds, Monzo, Chase and 20+ banks. No signup required.">
+<meta name="keywords" content="PDF bank statement to Excel, bank statement converter, convert bank statement to spreadsheet, PDF to Excel converter, categorise bank transactions, bank statement to CSV, free bank statement converter, Barclays statement to Excel, HSBC statement converter, Monzo export to Excel">
+<meta name="robots" content="index, follow">
+<meta name="author" content="PDFtoLedger">
+<link rel="canonical" href="https://pdftoledger.com/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pdftoledger.com/">
+<meta property="og:title" content="PDFtoLedger — Convert PDF Bank Statements to Categorised Excel">
+<meta property="og:description" content="Upload your PDF bank statement and get a clean, categorised Excel file in seconds. Free, private, works with 20+ UK and US banks.">
+<meta property="og:image" content="https://pdftoledger.com/og-image.png">
+<meta property="og:site_name" content="PDFtoLedger">
+<meta property="og:locale" content="en_GB">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://pdftoledger.com/">
+<meta name="twitter:title" content="PDFtoLedger — Convert PDF Bank Statements to Categorised Excel">
+<meta name="twitter:description" content="Upload your PDF bank statement and get a clean, categorised Excel file in seconds. Free, private, works with 20+ UK and US banks.">
+<meta name="twitter:image" content="https://pdftoledger.com/og-image.png">
+
+<!-- Schema.org Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PDFtoLedger",
+  "url": "https://pdftoledger.com",
+  "description": "Convert PDF bank statements to categorised Excel spreadsheets. Free online bank statement converter with auto-categorisation for 20+ UK and US banks.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern web browser with JavaScript enabled",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Free",
+      "price": "0",
+      "priceCurrency": "GBP",
+      "description": "10 pages per month with auto-categorisation and Excel download"
+    },
+    {
+      "@type": "Offer",
+      "name": "Pro",
+      "price": "9.00",
+      "priceCurrency": "GBP",
+      "priceValidUntil": "2027-12-31",
+      "description": "Unlimited pages, batch upload, custom category rules, and API access"
+    }
+  ],
+  "featureList": [
+    "Convert PDF bank statements to Excel",
+    "Auto-categorise transactions into spending categories",
+    "Support for 20+ UK and US banks",
+    "100% client-side processing — your data never leaves your browser",
+    "Download categorised .xlsx spreadsheet",
+    "Edit categories before downloading",
+    "Spending breakdown by category"
+  ]
+}
+</script>
+
+<!-- FAQ Schema for rich snippets -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is my financial data safe when converting bank statements?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Your PDF is processed entirely in your browser using JavaScript. Your file never leaves your computer — we don't upload it to any server, and we have zero access to your financial data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What bank statement formats are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PDFtoLedger works with text-based PDF statements from all major UK and US banks including Barclays, HSBC, Lloyds, NatWest, Santander, Monzo, Starling, Revolut, Chase, Bank of America, Wells Fargo, and more."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is the auto-categorisation of bank transactions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Our built-in dictionary covers hundreds of common merchants across categories like groceries, transport, dining, subscriptions, and utilities. Accuracy is typically around 80% on first use. You can edit any category before downloading."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert a bank statement PDF to Excel for free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. PDFtoLedger offers 10 free pages per month with no signup required. Simply upload your PDF bank statement and download the categorised Excel file instantly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the Excel file include?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your download includes a Transactions sheet with date, description, category, amount, and running balance for every transaction, plus a Summary sheet with totals by category, total income, total spending, and net balance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to create an account to convert bank statements?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The free tier gives you 10 pages per month with no signup at all. You only need an account if you upgrade to Pro for unlimited pages, batch upload, custom rules, and API access."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- Performance hints -->
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--navy:#0C2340;--navy-light:#163A5E;--blue:#185FA5;--blue-bright:#5BA3E6;
+--blue-pale:#E6F1FB;--white:#FFFFFF;--gray-50:#F8F9FA;--gray-100:#F2F2F2;
+--gray-200:#E5E5E5;--gray-400:#999;--gray-600:#666;--gray-800:#333;
+--radius:8px;--radius-lg:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--gray-800);background:var(--white);line-height:1.6}
+a{color:var(--blue);text-decoration:none}
+
+.container{max-width:960px;margin:0 auto;padding:0 24px}
+
+/* NAV */
+nav{background:var(--navy);padding:16px 0;position:sticky;top:0;z-index:100}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;font-weight:600;color:var(--white);letter-spacing:-0.5px}
+.logo span{color:var(--blue-bright)}
+nav a.nav-link{color:#8EAFC9;font-size:14px;margin-left:24px;transition:color .2s}
+nav a.nav-link:hover{color:var(--white)}
+
+/* HERO */
+.hero{background:var(--navy);padding:60px 0 48px;text-align:center}
+.hero h1{font-size:36px;font-weight:700;color:var(--white);margin-bottom:12px;line-height:1.2;letter-spacing:-0.5px}
+.hero p.sub{font-size:16px;color:#8EAFC9;max-width:540px;margin:0 auto 32px;line-height:1.6}
+
+/* UPLOAD ZONE */
+.upload-zone{background:var(--navy-light);border:2px dashed #3A7BBF;border-radius:var(--radius-lg);padding:40px 24px;max-width:500px;margin:0 auto;cursor:pointer;transition:border-color .3s,background .3s}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--blue-bright);background:#1D4E7A}
+.upload-zone .icon{width:48px;height:48px;margin:0 auto 12px;border-radius:50%;background:#1D4E7A;display:flex;align-items:center;justify-content:center}
+.upload-zone p.main{font-size:16px;color:var(--white);font-weight:500;margin-bottom:4px}
+.upload-zone p.hint{font-size:13px;color:#6A9AC4}
+.upload-zone input{display:none}
+
+.cta-btn{display:inline-block;background:var(--blue);color:var(--white);font-size:15px;font-weight:600;padding:12px 32px;border-radius:var(--radius);border:none;cursor:pointer;margin-top:20px;transition:background .2s}
+.cta-btn:hover{background:#1A6FBF}
+
+.privacy-note{font-size:12px;color:#6A9AC4;margin-top:10px}
+
+/* PROCESSING STATE */
+.processing{display:none;text-align:center;padding:32px 0}
+.processing.active{display:block}
+.spinner{width:40px;height:40px;border:3px solid #3A7BBF;border-top-color:var(--blue-bright);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.processing p{color:#8EAFC9;font-size:14px}
+
+/* RESULTS */
+.results-section{display:none;padding:40px 0;background:var(--gray-50)}
+.results-section.active{display:block}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.results-header h2{font-size:22px;font-weight:600;color:var(--navy)}
+.download-btn{background:var(--blue);color:var(--white);font-size:14px;font-weight:600;padding:10px 24px;border-radius:var(--radius);border:none;cursor:pointer;transition:background .2s}
+.download-btn:hover{background:#1A6FBF}
+
+/* SUMMARY CARDS */
+.summary-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.s-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px;text-align:center}
+.s-card .label{font-size:12px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.s-card .value{font-size:22px;font-weight:600;color:var(--navy)}
+
+/* TRANSACTION TABLE */
+.table-wrap{overflow-x:auto;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--navy);color:var(--white)}
+th{padding:10px 12px;text-align:left;font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+td{padding:10px 12px;border-bottom:1px solid var(--gray-100)}
+tr:hover{background:var(--blue-pale)}
+td.amount-in{color:#0F6E56;font-weight:600}
+td.amount-out{color:#C00000;font-weight:600}
+select.cat-select{font-size:12px;padding:4px 8px;border:1px solid var(--gray-200);border-radius:4px;background:var(--white);cursor:pointer}
+
+/* CATEGORY BREAKDOWN */
+.breakdown{margin-top:24px}
+.breakdown h3{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:12px}
+.bar-chart{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:flex;align-items:center;gap:12px}
+.bar-label{font-size:13px;color:var(--gray-600);width:140px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:24px;background:var(--gray-100);border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;background:var(--blue);transition:width .6s ease}
+.bar-value{font-size:12px;font-weight:600;color:var(--gray-800);width:80px;text-align:right;flex-shrink:0}
+
+/* SECTIONS */
+section{padding:60px 0}
+section:nth-child(even){background:var(--gray-50)}
+section h2{font-size:26px;font-weight:700;text-align:center;color:var(--navy);margin-bottom:8px}
+section p.section-sub{font-size:15px;color:var(--gray-600);text-align:center;margin-bottom:36px}
+
+/* HOW IT WORKS */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.step{text-align:center;padding:24px 16px;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg)}
+.step .num{width:40px;height:40px;border-radius:50%;background:var(--blue-pale);color:var(--blue);font-size:16px;font-weight:600;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.step h3{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.step p{font-size:13px;color:var(--gray-600)}
+
+/* BANKS */
+.banks-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.bank-pill{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:8px 18px;font-size:13px;color:var(--gray-600);font-weight:500}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:640px;margin:0 auto}
+.price-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:28px 24px;position:relative}
+.price-card.featured{border:2px solid var(--blue)}
+.price-card .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:var(--white);font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px}
+.price-card h3{font-size:18px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.price-card .price{font-size:32px;font-weight:700;color:var(--navy);margin-bottom:16px}
+.price-card .price span{font-size:14px;font-weight:400;color:var(--gray-400)}
+.price-card ul{list-style:none;padding:0}
+.price-card li{font-size:13px;color:var(--gray-600);padding:6px 0;padding-left:22px;position:relative}
+.price-card li::before{content:"";position:absolute;left:0;top:10px;width:14px;height:14px;border-radius:50%;background:var(--blue-pale)}
+.price-card li.disabled{color:var(--gray-400);text-decoration:line-through}
+.price-card li.disabled::before{background:var(--gray-100)}
+
+/* FAQ */
+.faq-list{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.faq-item{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden}
+.faq-q{padding:14px 18px;font-size:14px;font-weight:600;color:var(--navy);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.faq-q::after{content:"+";font-size:18px;color:var(--gray-400);transition:transform .2s}
+.faq-item.open .faq-q::after{content:"−"}
+.faq-a{padding:0 18px 14px;font-size:13px;color:var(--gray-600);display:none;line-height:1.6}
+.faq-item.open .faq-a{display:block}
+
+/* FOOTER */
+footer{background:var(--navy);padding:32px 0;text-align:center}
+footer p{font-size:13px;color:#6A9AC4}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .hero h1{font-size:26px}
+  .steps{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  nav a.nav-link{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav aria-label="Main navigation">
+  <div class="container">
+    <a href="/" class="logo" aria-label="PDFtoLedger home">PDF<span>toLedger</span></a>
+    <div>
+      <a href="#how-it-works" class="nav-link">How it works</a>
+      <a href="#banks" class="nav-link">Banks</a>
+      <a href="#pricing" class="nav-link">Pricing</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<main>
+<section class="hero" id="hero">
+  <div class="container">
+    <h1>Convert PDF bank statements to categorised Excel spreadsheets in seconds</h1>
+    <p class="sub">Upload your PDF bank statement and get a clean, categorised Excel file — no manual data entry, no formulas, no stress. Works with Barclays, HSBC, Lloyds, Monzo, Chase and 20+ banks.</p>
+
+    <div class="upload-zone" id="uploadZone" role="button" tabindex="0" aria-label="Upload PDF bank statement for conversion to Excel">
+      <div class="icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M11 3v12M7 7l4-4 4 4" stroke="#5BA3E6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 15v3a1 1 0 001 1h14a1 1 0 001-1v-3" stroke="#5BA3E6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <p class="main">Drop your bank statement PDF here</p>
+      <p class="hint">PDF format, up to 10MB — convert bank statement to Excel instantly</p>
+      <input type="file" id="fileInput" accept=".pdf" aria-label="Choose PDF bank statement file">
+    </div>
+    <button class="cta-btn" id="ctaBtn">Convert bank statement for free</button>
+    <p class="privacy-note">Your files are processed entirely in your browser — we never upload, store, or see your data. 100% private bank statement conversion.</p>
+
+    <div class="processing" id="processing">
+      <div class="spinner"></div>
+      <p id="processingText">Extracting transactions...</p>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="results-section" id="results">
+  <div class="container">
+    <div class="results-header">
+      <h2>Your categorised statement</h2>
+      <button class="download-btn" id="downloadBtn">Download Excel</button>
+    </div>
+
+    <div class="summary-cards" id="summaryCards"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th style="text-align:right">Amount</th>
+            <th style="text-align:right">Balance</th>
+          </tr>
+        </thead>
+        <tbody id="txnBody"></tbody>
+      </table>
+    </div>
+
+    <div class="breakdown" id="breakdown">
+      <h3>Spending by category</h3>
+      <div class="bar-chart" id="barChart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" aria-labelledby="how-heading">
+  <div class="container">
+    <h2 id="how-heading">How to convert a bank statement PDF to Excel</h2>
+    <p class="section-sub">Three steps. Under 10 seconds. No signup required to convert your bank statement.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="num" aria-hidden="true">1</div>
+        <h3>Upload your PDF bank statement</h3>
+        <p>Drag and drop your bank statement or click to browse. We support PDF statements from all major UK and US banks including Barclays, HSBC, Monzo, and Chase.</p>
+      </div>
+      <div class="step">
+        <div class="num" aria-hidden="true">2</div>
+        <h3>Auto-categorise transactions</h3>
+        <p>Our engine identifies each transaction and automatically sorts it into spending categories like groceries, bills, transport, subscriptions, and more.</p>
+      </div>
+      <div class="step">
+        <div class="num" aria-hidden="true">3</div>
+        <h3>Download categorised Excel file</h3>
+        <p>Get a clean .xlsx spreadsheet with every transaction categorised, plus a summary breakdown of your spending by category.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORTED BANKS -->
+<section id="banks" style="background:var(--gray-50)" aria-labelledby="banks-heading">
+  <div class="container">
+    <h2 id="banks-heading">Supported banks for PDF statement conversion</h2>
+    <p class="section-sub">Convert PDF bank statements to Excel from these banks and more. Works with any digital PDF statement.</p>
+    <div class="banks-grid">
+      <span class="bank-pill">Barclays</span>
+      <span class="bank-pill">HSBC</span>
+      <span class="bank-pill">Lloyds</span>
+      <span class="bank-pill">NatWest</span>
+      <span class="bank-pill">Santander</span>
+      <span class="bank-pill">Halifax</span>
+      <span class="bank-pill">Nationwide</span>
+      <span class="bank-pill">Monzo</span>
+      <span class="bank-pill">Starling</span>
+      <span class="bank-pill">Revolut</span>
+      <span class="bank-pill">Chase UK</span>
+      <span class="bank-pill">Metro Bank</span>
+      <span class="bank-pill">TSB</span>
+      <span class="bank-pill">Co-op Bank</span>
+      <span class="bank-pill">Chase US</span>
+      <span class="bank-pill">Bank of America</span>
+      <span class="bank-pill">Wells Fargo</span>
+      <span class="bank-pill">Citi</span>
+      <span class="bank-pill">Capital One</span>
+      <span class="bank-pill">US Bank</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" aria-labelledby="pricing-heading">
+  <div class="container">
+    <h2 id="pricing-heading">Bank statement converter pricing</h2>
+    <p class="section-sub">Start free. Convert bank statements to Excel with no signup. Upgrade when you need more.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <h3>Free</h3>
+        <div class="price">£0<span> /month</span></div>
+        <ul>
+          <li>10 pages per month</li>
+          <li>Auto-categorisation</li>
+          <li>Excel download</li>
+          <li>Edit categories before download</li>
+          <li class="disabled">Unlimited pages</li>
+          <li class="disabled">Batch upload (up to 50)</li>
+          <li class="disabled">Custom category rules</li>
+          <li class="disabled">API access</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="badge">Most popular</div>
+        <h3>Pro</h3>
+        <div class="price">£9<span> /month</span></div>
+        <ul>
+          <li>Unlimited pages</li>
+          <li>Auto-categorisation</li>
+          <li>Excel download</li>
+          <li>Edit categories before download</li>
+          <li>Batch upload (up to 50)</li>
+          <li>Custom category rules</li>
+          <li>API access</li>
+          <li>Priority support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="background:var(--gray-50)" aria-labelledby="faq-heading">
+  <div class="container">
+    <h2 id="faq-heading">Frequently asked questions about converting bank statements</h2>
+    <p class="section-sub">Everything you need to know about converting PDF bank statements to Excel with PDFtoLedger.</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Is my financial data safe when converting bank statements?</div>
+        <div class="faq-a">Absolutely. Your PDF bank statement is processed entirely in your browser using JavaScript. Your file never leaves your computer — we don't upload it to any server, and we have zero access to your financial data. There's no account, no cloud storage, no tracking. PDFtoLedger is a 100% private bank statement converter.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Which bank statement PDF formats can I convert to Excel?</div>
+        <div class="faq-a">PDFtoLedger converts text-based PDF statements from all major UK and US banks to Excel, including Barclays, HSBC, Lloyds, NatWest, Santander, Monzo, Starling, Revolut, Chase, Bank of America, and Wells Fargo. These are the digital PDFs you download from your online banking portal. Scanned paper statements (image-based PDFs) are not currently supported, but we're working on OCR support for a future release.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How accurate is the auto-categorisation of bank transactions?</div>
+        <div class="faq-a">Our built-in dictionary covers hundreds of common merchants across categories like groceries, transport, dining, subscriptions, and utilities. Accuracy is typically around 80% on first use. You can edit any category before downloading, and Pro users can save custom rules that improve accuracy over time.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I customise the bank transaction categories?</div>
+        <div class="faq-a">Yes. Before downloading your Excel file, you can change the category of any transaction using the dropdown in the results table. Pro users can create persistent custom rules — for example, "anything containing PATEL = Groceries" — that apply automatically to future uploads.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What does the converted Excel bank statement include?</div>
+        <div class="faq-a">Your download includes a Transactions sheet with date, description, category, amount, and running balance for every transaction, plus a Summary sheet with totals by category, total income, total spending, and net balance.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need an account to convert bank statements to Excel?</div>
+        <div class="faq-a">No. The free tier gives you 10 pages per month with no signup at all — just upload, convert, and download. You only need an account if you upgrade to Pro for unlimited pages, batch upload, custom rules, and API access.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p style="margin-bottom:6px"><span style="font-weight:600;color:var(--white)">PDF</span><span style="font-weight:600;color:var(--blue-bright)">toLedger</span></p>
+    <p>The free PDF bank statement to Excel converter. Built for bookkeepers, freelancers, and small businesses.</p>
+    <p style="margin-top:6px;font-size:12px;line-height:1.8">Convert bank statement PDF to Excel &middot; Bank statement to spreadsheet &middot; Categorise bank transactions automatically</p>
+    <p style="margin-top:8px;font-size:12px">&copy; 2026 PDFtoLedger. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const CATEGORIES = {
+  'Groceries': ['tesco','sainsbury','asda','aldi','lidl','morrisons','waitrose','co-op','ocado','iceland','marks spencer','m&s','wholefood','trader joe','kroger','publix','safeway','wegmans','costco','walmart supercenter','grocery','supermarket','food store','fresh market','sprouts','hy-vee','piggly','winn-dixie','food lion','stop shop','giant','hannaford','shoprite','market basket'],
+  'Dining & Takeaway': ['mcdonald','burger king','kfc','nando','pizza hut','domino','deliveroo','uber eats','just eat','grubhub','doordash','starbucks','costa coffee','pret a manger','greggs','subway','five guys','wagamama','chipotle','taco bell','wendy','chick-fil','popeyes','dunkin','tim horton','restaurant','cafe','bistro','diner','eating','takeaway','takeout','food delivery'],
+  'Transport': ['tfl','transport for london','oyster','uber','lyft','bolt','gett','national rail','trainline','southwest rail','northern rail','avanti','lner','gwr','scotrail','bus','taxi','cab','parking','ncp','ringgo','justpark','fuel','petrol','diesel','shell','bp','esso','texaco','total','gulf','garage','motor','congestion','dart charge','toll','m6toll'],
+  'Bills & Utilities': ['electric','gas','water','energy','british gas','edf','eon','octopus energy','bulb','ovo energy','scottish power','thames water','severn trent','united utilities','anglian water','council tax','tv licence','virgin media','sky','bt','talktalk','plusnet','vodafone','ee ','o2','three','giffgaff','broadband','internet','phone bill','mobile','utility','utilities'],
+  'Subscriptions': ['netflix','spotify','apple','amazon prime','disney','hbo','hulu','youtube premium','audible','kindle','adobe','microsoft 365','office 365','dropbox','icloud','google one','canva','notion','chatgpt','openai','linkedin premium','gym','fitness','membership','subscription','monthly','annual renewal','recurring'],
+  'Shopping': ['amazon','ebay','asos','boohoo','primark','next','zara','h&m','uniqlo','john lewis','argos','currys','ikea','b&q','homebase','target','best buy','home depot','lowes','macys','nordstrom','nike','adidas','sports direct','decathlon','etsy','shein','shop','store','retail','purchase','clothing','fashion','electronics','furniture'],
+  'Housing': ['rent','mortgage','letting','estate agent','rightmove','zoopla','housing','tenancy','deposit','landlord','property','home insurance','buildings insurance','contents insurance','ground rent','service charge','management fee','lease'],
+  'Health & Wellness': ['pharmacy','boots','superdrug','lloyds pharmacy','doctor','dentist','optician','hospital','nhs','bupa','vitality','gym','fitness','yoga','pilates','spa','therapy','therapist','counsell','physiotherapy','chiropract','prescription','medical','health','wellness','cvs','walgreens','rite aid'],
+  'Entertainment': ['cinema','odeon','cineworld','vue','theatre','theater','concert','ticketmaster','eventbrite','seetickets','game','playstation','xbox','steam','nintendo','spotify','music','book','waterstones','wh smith','festival','museum','gallery','zoo','theme park','amusement','bowling','leisure','recreation'],
+  'Insurance': ['insurance','aviva','direct line','admiral','churchill','more than','compare the market','confused.com','gocompare','moneysupermarket','aa ','rac ','green flag','pet insurance','life insurance','health insurance','car insurance','home insurance','travel insurance','premium','policy','underwriter'],
+  'Travel': ['hotel','booking.com','airbnb','trivago','expedia','skyscanner','easyjet','ryanair','british airways','jet2','tui','virgin atlantic','holiday','flight','airline','airport','lounge','car hire','hertz','enterprise','avis','eurostar','ferry','cruise','travel','vacation','trip'],
+  'Financial': ['transfer','bank charge','overdraft','interest','fee','commission','atm','cash withdrawal','standing order','direct debit','loan','credit card','payment','refund','chargeback','investment','savings','isa','pension','dividend','trading','forex','crypto','bitcoin','coinbase','binance'],
+  'Education': ['university','college','school','tuition','student','course','udemy','coursera','skillshare','masterclass','education','learning','training','textbook','student loan'],
+  'Personal Care': ['barber','hairdress','salon','beauty','nail','wax','tattoo','piercing','dry clean','laundry','tailor'],
+  'Charity & Gifts': ['charity','donation','donate','gift','present','oxfam','red cross','cancer research','british heart','save the children','unicef','macmillan','gofundme','justgiving'],
+  'Income': ['salary','wages','payroll','bonus','commission','dividend','interest received','tax refund','refund','cashback','rebate','credit','deposit','transfer in','incoming','received','bacs credit'],
+  'Uncategorised': []
+};
+
+const CATEGORY_LIST = Object.keys(CATEGORIES);
+const CATEGORY_COLORS = {
+  'Groceries':'#0F6E56','Dining & Takeaway':'#D85A30','Transport':'#185FA5','Bills & Utilities':'#854F0B',
+  'Subscriptions':'#993556','Shopping':'#534AB7','Housing':'#3C3489','Health & Wellness':'#1D9E75',
+  'Entertainment':'#D4537E','Insurance':'#5F5E5A','Travel':'#378ADD','Financial':'#888780',
+  'Education':'#639922','Personal Care':'#BA7517','Charity & Gifts':'#993556','Income':'#0F6E56','Uncategorised':'#999'
+};
+
+let transactions = [];
+
+function categorise(desc) {
+  const lower = desc.toLowerCase();
+  for (const [cat, keywords] of Object.entries(CATEGORIES)) {
+    if (cat === 'Uncategorised') continue;
+    for (const kw of keywords) {
+      if (lower.includes(kw)) return cat;
+    }
+  }
+  return 'Uncategorised';
+}
+
+function parseAmount(str) {
+  if (!str) return null;
+  const cleaned = str.replace(/[£$,\s]/g, '').replace(/[()]/g, m => m === '(' ? '-' : '');
+  const num = parseFloat(cleaned);
+  return isNaN(num) ? null : num;
+}
+
+function parseTransactions(text) {
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  const txns = [];
+  const datePatterns = [
+    /^(\d{1,2}[\s\/\-\.]\w{3}[\s\/\-\.]\d{2,4})/,
+    /^(\d{1,2}[\s\/\-\.]\d{1,2}[\s\/\-\.]\d{2,4})/,
+    /^(\w{3}[\s]+\d{1,2}[\s,]+\d{2,4})/,
+    /^(\d{4}[\-\/]\d{2}[\-\/]\d{2})/
+  ];
+  const amountPattern = /[£$]?\s*[\d,]+\.\d{2}/g;
+
+  for (const line of lines) {
+    let dateMatch = null;
+    for (const dp of datePatterns) {
+      const m = line.match(dp);
+      if (m) { dateMatch = m[1]; break; }
+    }
+    if (!dateMatch) continue;
+
+    const amounts = line.match(amountPattern);
+    if (!amounts || amounts.length === 0) continue;
+
+    const afterDate = line.substring(dateMatch.length).trim();
+    let desc = afterDate;
+    for (const amt of amounts) {
+      desc = desc.replace(amt, '').trim();
+    }
+    desc = desc.replace(/\s{2,}/g, ' ').replace(/^[\s\-\|]+/, '').replace(/[\s\-\|]+$/, '').trim();
+    if (!desc || desc.length < 2) desc = 'Transaction';
+
+    let amount = parseAmount(amounts[0]);
+    let balance = amounts.length > 1 ? parseAmount(amounts[amounts.length - 1]) : null;
+
+    if (amounts.length === 1) {
+      balance = null;
+    }
+
+    const cat = categorise(desc);
+    if (cat === 'Income' && amount < 0) amount = Math.abs(amount);
+    if (cat !== 'Income' && amount > 0) {
+      const hasDebitIndicator = /\b(debit|dr|payment|purchase|paid|direct debit|dd|card)\b/i.test(line);
+      if (hasDebitIndicator) amount = -Math.abs(amount);
+    }
+
+    txns.push({
+      date: dateMatch,
+      description: desc,
+      category: cat,
+      amount: amount,
+      balance: balance
+    });
+  }
+  return txns;
+}
+
+function renderResults() {
+  const tbody = document.getElementById('txnBody');
+  tbody.innerHTML = '';
+
+  transactions.forEach((txn, i) => {
+    const tr = document.createElement('tr');
+    const isIncome = txn.amount > 0;
+    const amtClass = isIncome ? 'amount-in' : 'amount-out';
+    const amtStr = (isIncome ? '+' : '') + '£' + Math.abs(txn.amount).toFixed(2);
+    const balStr = txn.balance !== null ? '£' + txn.balance.toFixed(2) : '—';
+
+    let opts = CATEGORY_LIST.map(c =>
+      `<option value="${c}"${c === txn.category ? ' selected' : ''}>${c}</option>`
+    ).join('');
+
+    tr.innerHTML = `
+      <td style="white-space:nowrap">${txn.date}</td>
+      <td>${txn.description}</td>
+      <td><select class="cat-select" data-idx="${i}">${opts}</select></td>
+      <td class="${amtClass}" style="text-align:right;white-space:nowrap">${amtStr}</td>
+      <td style="text-align:right;white-space:nowrap">${balStr}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.querySelectorAll('.cat-select').forEach(sel => {
+    sel.addEventListener('change', e => {
+      transactions[parseInt(e.target.dataset.idx)].category = e.target.value;
+      renderSummary();
+    });
+  });
+
+  renderSummary();
+}
+
+function renderSummary() {
+  const totalIn = transactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
+  const totalOut = transactions.filter(t => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
+  const net = totalIn - totalOut;
+
+  document.getElementById('summaryCards').innerHTML = `
+    <div class="s-card"><div class="label">Transactions</div><div class="value">${transactions.length}</div></div>
+    <div class="s-card"><div class="label">Total income</div><div class="value" style="color:#0F6E56">£${totalIn.toFixed(2)}</div></div>
+    <div class="s-card"><div class="label">Total spending</div><div class="value" style="color:#C00000">£${totalOut.toFixed(2)}</div></div>
+    <div class="s-card"><div class="label">Net balance</div><div class="value" style="color:${net >= 0 ? '#0F6E56' : '#C00000'}">£${Math.abs(net).toFixed(2)}</div></div>
+  `;
+
+  const catTotals = {};
+  transactions.filter(t => t.amount < 0).forEach(t => {
+    const c = t.category;
+    catTotals[c] = (catTotals[c] || 0) + Math.abs(t.amount);
+  });
+
+  const sorted = Object.entries(catTotals).sort((a, b) => b[1] - a[1]);
+  const maxVal = sorted.length > 0 ? sorted[0][1] : 1;
+
+  const barChart = document.getElementById('barChart');
+  barChart.innerHTML = sorted.map(([cat, val]) => {
+    const pct = Math.round((val / maxVal) * 100);
+    const color = CATEGORY_COLORS[cat] || '#999';
+    return `
+      <div class="bar-row">
+        <div class="bar-label">${cat}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="bar-value">£${val.toFixed(2)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function downloadExcel() {
+  const wb = XLSX.utils.book_new();
+
+  const txnData = [['Date', 'Description', 'Category', 'Amount', 'Balance']];
+  transactions.forEach(t => {
+    txnData.push([t.date, t.description, t.category, t.amount, t.balance]);
+  });
+  const ws1 = XLSX.utils.aoa_to_sheet(txnData);
+  ws1['!cols'] = [{wch:14},{wch:40},{wch:20},{wch:12},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'Transactions');
+
+  const catTotals = {};
+  let totalIn = 0, totalOut = 0;
+  transactions.forEach(t => {
+    if (t.amount > 0) totalIn += t.amount;
+    else {
+      totalOut += Math.abs(t.amount);
+      catTotals[t.category] = (catTotals[t.category] || 0) + Math.abs(t.amount);
+    }
+  });
+
+  const sumData = [['Category', 'Total Spent']];
+  Object.entries(catTotals).sort((a, b) => b[1] - a[1]).forEach(([c, v]) => {
+    sumData.push([c, v]);
+  });
+  sumData.push([]);
+  sumData.push(['Total Income', totalIn]);
+  sumData.push(['Total Spending', totalOut]);
+  sumData.push(['Net Balance', totalIn - totalOut]);
+
+  const ws2 = XLSX.utils.aoa_to_sheet(sumData);
+  ws2['!cols'] = [{wch:22},{wch:14}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Summary');
+
+  XLSX.writeFile(wb, 'PDFtoLedger_Statement.xlsx');
+}
+
+async function processFile(file) {
+  if (!file || file.type !== 'application/pdf') {
+    alert('Please upload a PDF file.');
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File size exceeds 10MB limit.');
+    return;
+  }
+
+  document.getElementById('processing').classList.add('active');
+  document.getElementById('results').classList.remove('active');
+  document.getElementById('uploadZone').style.display = 'none';
+  document.getElementById('ctaBtn').style.display = 'none';
+
+  try {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+    let fullText = '';
+
+    document.getElementById('processingText').textContent = `Reading ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''}...`;
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const strings = content.items.map(item => item.str);
+      fullText += strings.join(' ') + '\n';
+    }
+
+    document.getElementById('processingText').textContent = 'Extracting transactions...';
+    await new Promise(r => setTimeout(r, 300));
+
+    transactions = parseTransactions(fullText);
+
+    if (transactions.length === 0) {
+      alert('No transactions found. This PDF may be scanned (image-based) or in an unsupported format. PDFtoLedger works best with digital PDF statements downloaded from online banking.');
+      document.getElementById('processing').classList.remove('active');
+      document.getElementById('uploadZone').style.display = '';
+      document.getElementById('ctaBtn').style.display = '';
+      return;
+    }
+
+    document.getElementById('processingText').textContent = `Categorising ${transactions.length} transactions...`;
+    await new Promise(r => setTimeout(r, 400));
+
+    document.getElementById('processing').classList.remove('active');
+    document.getElementById('results').classList.add('active');
+    renderResults();
+    document.getElementById('results').scrollIntoView({behavior: 'smooth'});
+
+  } catch (err) {
+    console.error(err);
+    alert('Error processing PDF: ' + err.message);
+    document.getElementById('processing').classList.remove('active');
+    document.getElementById('uploadZone').style.display = '';
+    document.getElementById('ctaBtn').style.display = '';
+  }
+}
+
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+
+uploadZone.addEventListener('click', () => fileInput.click());
+document.getElementById('ctaBtn').addEventListener('click', () => fileInput.click());
+document.getElementById('downloadBtn').addEventListener('click', downloadExcel);
+
+fileInput.addEventListener('change', e => {
+  if (e.target.files.length > 0) processFile(e.target.files[0]);
+});
+
+uploadZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  uploadZone.classList.add('drag-over');
+});
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  if (e.dataTransfer.files.length > 0) processFile(e.dataTransfer.files[0]);
+});
+
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    q.parentElement.classList.toggle('open');
+  });
+});
+
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({behavior: 'smooth'});
+  });
+});
+</script>
+</body>
+</html>
