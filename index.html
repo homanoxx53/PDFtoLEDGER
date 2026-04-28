@@ -549,6 +549,8 @@ footer p{font-size:13px;color:#6A9AC4}
           <li class="disabled">Custom category rules</li>
           <li class="disabled">API access</li>
         </ul>
+        <button class="checkout-btn" data-plan="starter" style="margin-top:20px;width:100%;background:var(--blue);color:var(--white);font-size:14px;font-weight:600;padding:11px;border-radius:var(--radius);border:none;cursor:pointer;transition:background .2s" onmouseover="this.style.background='#1A6FBF'" onmouseout="this.style.background='var(--blue)'">Start 14-day free trial</button>
+        <p style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:8px">No charge for 14 days. Cancel any time.</p>
       </div>
 
       <!-- PRO -->
@@ -566,6 +568,8 @@ footer p{font-size:13px;color:#6A9AC4}
           <li>API access</li>
           <li>Priority support</li>
         </ul>
+        <button class="checkout-btn" data-plan="pro" style="margin-top:20px;width:100%;background:#0F6E56;color:var(--white);font-size:14px;font-weight:600;padding:11px;border-radius:var(--radius);border:none;cursor:pointer;transition:background .2s" onmouseover="this.style.background='#0A5240'" onmouseout="this.style.background='#0F6E56'">Start 14-day free trial</button>
+        <p style="font-size:11px;color:var(--gray-400);text-align:center;margin-top:8px">No charge for 14 days. Cancel any time.</p>
       </div>
 
     </div>
@@ -634,7 +638,7 @@ footer p{font-size:13px;color:#6A9AC4}
           <li>API access for workflow automation</li>
           <li>Priority email support</li>
         </ul>
-        <button class="practice-cta">Get started — 14 days free</button>
+        <button class="practice-cta checkout-btn" data-plan="pro">Get started — 14 days free</button>
       </div>
     </div>
   </div>
@@ -1251,6 +1255,41 @@ document.getElementById('sampleBtn').addEventListener('click', loadSampleData);
 document.getElementById('downloadCsvBtn').addEventListener('click', downloadCSV);
 document.getElementById('filterSearch').addEventListener('input', filterTable);
 document.getElementById('filterCategory').addEventListener('change', filterTable);
+
+// ===== STRIPE CHECKOUT =====
+document.querySelectorAll('.checkout-btn').forEach(btn => {
+  btn.addEventListener('click', async function() {
+    const plan = this.dataset.plan;
+    const originalText = this.textContent;
+
+    // Show loading state
+    this.disabled = true;
+    this.textContent = 'Loading…';
+
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.url) {
+        throw new Error(data.error || 'Could not start checkout.');
+      }
+
+      // Redirect to Stripe hosted checkout
+      window.location.href = data.url;
+
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert('Something went wrong starting checkout. Please try again or contact support@pdftoledger.com');
+      this.disabled = false;
+      this.textContent = originalText;
+    }
+  });
+});
 </script>
 </body>
 </html>

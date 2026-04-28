@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to PDFtoLedger!</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--navy:#0C2340;--blue:#185FA5;--blue-bright:#5BA3E6;--blue-pale:#E6F1FB;
+--white:#FFFFFF;--gray-50:#F8F9FA;--gray-100:#F2F2F2;--gray-200:#E5E5E5;
+--gray-400:#767676;--gray-600:#666;--gray-800:#333;--green:#0F6E56;
+--radius:8px;--radius-lg:12px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:var(--gray-800);background:var(--white);min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--blue);text-decoration:none}
+
+nav{background:var(--navy);padding:16px 0}
+nav .container{display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto;padding:0 24px}
+.logo{font-size:20px;font-weight:600;color:var(--white);letter-spacing:-0.5px;text-decoration:none}
+.logo span{color:var(--blue-bright)}
+
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+
+.card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:48px 40px;max-width:500px;width:100%;box-shadow:0 4px 24px rgba(0,0,0,0.06);text-align:center}
+
+.check-circle{width:72px;height:72px;border-radius:50%;background:#F0FDF4;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:32px}
+
+h1{font-size:26px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.sub{font-size:15px;color:var(--gray-600);line-height:1.6;margin-bottom:28px}
+
+.plan-badge{display:inline-block;background:var(--blue-pale);color:var(--blue);font-size:13px;font-weight:600;padding:5px 16px;border-radius:20px;margin-bottom:28px}
+
+.next-steps{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px 24px;margin-bottom:28px;text-align:left}
+.next-steps h3{font-size:13px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:14px}
+.step-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.step-row:last-child{margin-bottom:0}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--blue);color:var(--white);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:13px;color:var(--gray-800);line-height:1.5}
+
+.btn-primary{display:block;width:100%;background:var(--blue);color:var(--white);font-size:15px;font-weight:600;padding:14px;border-radius:var(--radius);border:none;cursor:pointer;transition:background .2s;text-decoration:none;margin-bottom:10px}
+.btn-primary:hover{background:#1A6FBF}
+.btn-secondary{display:block;width:100%;background:var(--white);color:var(--gray-600);font-size:14px;padding:11px;border-radius:var(--radius);border:1px solid var(--gray-200);cursor:pointer;text-decoration:none;transition:all .2s}
+.btn-secondary:hover{border-color:var(--blue);color:var(--blue)}
+
+.trial-note{font-size:12px;color:var(--gray-400);margin-top:16px;line-height:1.6}
+
+footer{background:var(--navy);padding:24px 0;text-align:center}
+footer p{font-size:13px;color:#6A9AC4}
+
+@media(max-width:520px){.card{padding:32px 20px} h1{font-size:22px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="/" class="logo">PDF<span>toLedger</span></a>
+  </div>
+</nav>
+
+<main>
+  <div class="card">
+    <div class="check-circle">✓</div>
+    <h1>You're all set!</h1>
+    <p class="sub">Your subscription is active and your 14-day free trial has started. A confirmation email is on its way to you.</p>
+
+    <div class="plan-badge" id="plan-badge">Starter Plan — £9/month</div>
+
+    <div class="next-steps">
+      <h3>What's next</h3>
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-text">Go back to PDFtoLedger and upload your first bank statement PDF</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">2</div>
+        <div class="step-text">Review your auto-categorised transactions and edit any categories you'd like to adjust</div>
+      </div>
+      <div class="step-row">
+        <div class="step-num">3</div>
+        <div class="step-text">Download your clean Excel or CSV file — ready for your accounts, tax return, or budgeting tool</div>
+      </div>
+    </div>
+
+    <a href="/" class="btn-primary">Start converting →</a>
+    <a href="/subscription-policy" class="btn-secondary">View subscription policy</a>
+
+    <p class="trial-note">Your trial ends in 14 days. You won't be charged until then and you can cancel at any time from your account settings. Questions? Email <a href="mailto:support@pdftoledger.com">support@pdftoledger.com</a></p>
+  </div>
+</main>
+
+<footer>
+  <div class="container" style="max-width:960px;margin:0 auto;padding:0 24px">
+    <p style="margin-bottom:6px"><span style="font-weight:600;color:var(--white)">PDF</span><span style="font-weight:600;color:var(--blue-bright)">toLedger</span></p>
+    <p style="margin-top:6px;font-size:12px">
+      <a href="/privacy" style="color:#8EAFC9">Privacy Policy</a> &middot;
+      <a href="/terms" style="color:#8EAFC9">Terms of Use</a> &middot;
+      <a href="/subscription-policy" style="color:#8EAFC9">Subscription Policy</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Show correct plan name from URL param
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  // Optional: fetch session details to personalise the page
+  // For now, detect plan from session_id prefix or a stored value
+  // You can enhance this by calling an /api/get-session endpoint
+</script>
+
+</body>
+</html>
