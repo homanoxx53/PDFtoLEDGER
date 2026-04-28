@@ -986,7 +986,7 @@ async function processFile(file) {
     const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
     let fullText = '';
 
-.textContent = `Reading ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''}...`;
+document.getElementById('processingText').textContent = `Reading ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''}...`;
 
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
