@@ -810,7 +810,7 @@ function parseTransactions(text) {
     /^(\w{3}[\s]+\d{1,2}[\s,]+\d{2,4})/,
     /^(\d{4}[\-\/]\d{2}[\-\/]\d{2})/
   ];
-  const amountPattern = /[£$]?\s*[\d,]+\.\d{2}/g;
+  const amountPattern = /[-£$]?\s*[\d,]+\.\d{2}/g;
 
   for (const line of lines) {
     let dateMatch = null;
@@ -995,8 +995,16 @@ document.getElementById('processingText').textContent = `Reading ${pdf.numPages}
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const content = await page.getTextContent();
-      const strings = content.items.map(item => item.str);
-      fullText += strings.join(' ') + '\n';
+      const lineMap = {};
+      content.items.forEach(item => {
+        const y = Math.round(item.transform[5] / 2) * 2;
+        if (!lineMap[y]) lineMap[y] = [];
+        lineMap[y].push({ x: item.transform[4], str: item.str });
+      });
+      const sortedLines = Object.entries(lineMap)
+        .sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]))
+        .map(([y, items]) => items.sort((a, b) => a.x - b.x).map(i => i.str).join(' '));
+      fullText += sortedLines.join('\n') + '\n';
     }
 
     document.getElementById('processingText').textContent = 'Extracting transactions...';
