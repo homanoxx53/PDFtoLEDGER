@@ -804,26 +804,48 @@ function parseAmount(str) {
 function parseTransactions(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
   const txns = [];
+  // Patterns ordered so full-date (with year) matches before partial (no year)
   const datePatterns = [
-    /^(\d{1,2}[\s\/\-\.]\w{3}[\s\/\-\.]\d{2,4})/,
-    /^(\d{1,2}[\s\/\-\.]\d{1,2}[\s\/\-\.]\d{2,4})/,
-    /^(\w{3}[\s]+\d{1,2}[\s,]+\d{2,4})/,
-    /^(\d{4}[\-\/]\d{2}[\-\/]\d{2})/
+    /^(\d{4}[\-\/]\d{2}[\-\/]\d{2})/,                                         // ISO: 2020-01-28
+    /^(\d{1,2}[\s\/\-\.]\w{3}[\s\/\-\.]\d{2,4})/,                             // 20 Oct 2020
+    /^(\d{1,2}[\s\/\-\.]\d{1,2}[\s\/\-\.]\d{2,4})/,                           // 28/11/2019
+    /^(\w{3}[\s]+\d{1,2}[\s,]+\d{2,4})/,                                       // Oct 20, 2020
+    /^(\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\b/i      // 20 Oct (no year — Barclays)
   ];
   const amountPattern = /[-£$]?\s*[\d,]+\.\d{2}/g;
+  // Lines that are clearly headers, footers or summaries — skip them
+  const skipLine = /^(date\b|description\b|money\s+(in|out)|balance\b|page\s+\d|sort\s+code|account\s+no|swift|iban|continued|noticeboard|at a glance|your transactions|bank giro|online|statement date|last statement)/i;
+
+  let lastDate = null;
 
   for (const line of lines) {
+    if (skipLine.test(line)) continue;
+
+    // Try to find a date at the start of this line
     let dateMatch = null;
+    let dateInLine = false;
     for (const dp of datePatterns) {
       const m = line.match(dp);
-      if (m) { dateMatch = m[1]; break; }
+      if (m) { dateMatch = m[1]; dateInLine = true; break; }
     }
-    if (!dateMatch) continue;
+
+    if (dateInLine) {
+      lastDate = dateMatch;           // remember for dateless rows that follow
+    } else if (lastDate) {
+      dateMatch = lastDate;           // carry forward — Barclays omits date on 2nd+ txn per day
+    } else {
+      continue;                       // no date context yet, skip
+    }
+
+    // The part of the line after the date (or the whole line if date was carried over)
+    const afterDate = dateInLine ? line.substring(dateMatch.length).trim() : line;
+
+    // Skip balance summary rows (e.g. "20 Oct Start balance 727.67")
+    if (/^(start|end|opening|closing)\s+balance/i.test(afterDate)) continue;
 
     const amounts = line.match(amountPattern);
     if (!amounts || amounts.length === 0) continue;
 
-    const afterDate = line.substring(dateMatch.length).trim();
     let desc = afterDate;
     for (const amt of amounts) {
       desc = desc.replace(amt, '').trim();
@@ -841,7 +863,7 @@ function parseTransactions(text) {
     const cat = categorise(desc);
     if (cat === 'Income' && amount < 0) amount = Math.abs(amount);
     if (cat !== 'Income' && amount > 0) {
-      const hasDebitIndicator = /\b(debit|dr|payment|purchase|paid|direct debit|dd|card)\b/i.test(line);
+      const hasDebitIndicator = /\b(debit|dr|payment|purchase|paid|direct debit|dd|card|withdrawal|transfer)\b/i.test(line);
       if (hasDebitIndicator) amount = -Math.abs(amount);
     }
 
